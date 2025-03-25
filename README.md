@@ -1,65 +1,62 @@
+# Recursive SNS Lambda Project
 
-# Welcome to your CDK Python project!
+## 🚀 Overview
 
-You should explore the contents of this project. It demonstrates a CDK app with an instance of a stack (`logs_memory_leak_stack`)
-which contains an Amazon SQS queue that is subscribed to an Amazon SNS topic.
+This CDK Python application demonstrates a self-triggering Lambda function with an SNS topic and a configurable parameter. The project is designed to be deployed and tested on LocalStack.
+## 🧩 Key Components
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+- **SNS Topic**: A messaging topic that triggers the Lambda function
+- **Lambda Function**: A Python function with complex behavior
+- **SSM Parameter**: Controls the number of messages sent
 
-This project is set up like a standard Python project.  The initialization process also creates
-a virtualenv within this project, stored under the .venv directory.  To create the virtualenv
-it assumes that there is a `python3` executable in your path with access to the `venv` package.
-If for any reason the automatic creation of the virtualenv fails, you can create the virtualenv
-manually once the init process completes.
+## 🔍 How It Works
 
-To manually create a virtualenv on MacOS and Linux:
+The Lambda function performs the following steps when triggered:
 
+1. **Event Reception**
+   - Receives message from SNS topic
+   - Logs the incoming event details
+
+2. **Pause and Reflection**
+   - Waits for 2 seconds
+   - Retrieves current SSM Parameter value
+
+3. **Message Generation**
+   - If parameter value > 0
+     - Sends multiple messages to SNS topic
+     - Each message includes:
+       - Unique identifier
+       - Timestamp
+
+## 📊 Parameter Behavior
+
+- **Default Value**: 0 (no additional messages)
+- **Configurable**: Adjust to control message generation
+- **Purpose**: Test event propagation and recursive patterns
+
+## 🛠 Deployment Prerequisites
+
+- AWS CDK
+- Python 3.9+
+- LocalStack (recommended)
+
+### Quick Start
+
+```bash
+# Install dependencies
+pip install aws-cdk-lib boto3
+
+# Deploy to LocalStack
+cdk deploy
 ```
-$ python3 -m venv .venv
-```
 
-After the init process completes and the virtualenv is created, you can use the following
-step to activate your virtualenv.
+## 🔬 Use Cases
 
-```
-$ source .venv/bin/activate
-```
+- Event-driven architecture demonstrations
+- Message propagation testing
+- Lambda recursion pattern exploration
+- LocalStack development
 
-If you are a Windows platform, you would activate the virtualenv like this:
+## ⚠️ Caution
 
-```
-% .venv\Scripts\activate.bat
-```
-
-Once the virtualenv is activated, you can install the required dependencies.
-
-```
-$ pip install -r requirements.txt
-```
-
-At this point you can now synthesize the CloudFormation template for this code.
-
-```
-$ cdk synth
-```
-
-You can now begin exploring the source code, contained in the hello directory.
-There is also a very trivial test included that can be run like this:
-
-```
-$ pytest
-```
-
-To add additional dependencies, for example other CDK libraries, just add to
-your requirements.txt file and rerun the `pip install -r requirements.txt`
-command.
-
-## Useful commands
-
- * `cdk ls`          list all stacks in the app
- * `cdk synth`       emits the synthesized CloudFormation template
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk docs`        open CDK documentation
-
-Enjoy!
+Avoid unintended costs or infinite loops in production environments.
