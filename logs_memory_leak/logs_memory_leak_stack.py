@@ -21,7 +21,7 @@ class LogsMemoryLeakStack(cdk.Stack):
         parameter = ssm.StringParameter(
             self, "CountParameter",
             parameter_name="/recursive-lambda/count",
-            string_value="2"
+            string_value="1"
         )
 
         # Create a Lambda function
@@ -37,7 +37,8 @@ import os
 
 def handler(event, context):
     # Print the event
-    print("Received event:", json.dumps(event))
+    for n in range(1000):
+        print("Received event:", json.dumps(event))
     
     # Wait for 2 seconds
     time.sleep(2)
